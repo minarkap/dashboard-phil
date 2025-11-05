@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir -r backend-requirements.txt
 
 # Añade un LABEL para invalidar la caché de Railway y forzar un rebuild fresco
-LABEL build.ts="2025-11-05T17:20:00Z"
+LABEL build.ts="2025-11-05T17:30:00Z"
 
 # Copiar el resto del código
 COPY . /app/

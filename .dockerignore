@@ -31,13 +31,6 @@ ENV/
 .gitignore
 .gitattributes
 
-# Database (evitar excluir backend/db)
-/db/
-!backend/db/**
-*.db
-*.sqlite
-*.sqlite3
-
 # Logs
 *.log
 logs/
