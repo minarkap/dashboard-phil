@@ -31,8 +31,9 @@ ENV/
 .gitignore
 .gitattributes
 
-# Database
-db/
+# Database (evitar excluir backend/db)
+/db/
+!backend/db/**
 *.db
 *.sqlite
 *.sqlite3
