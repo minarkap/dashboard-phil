@@ -19,8 +19,16 @@ COPY backend/requirements.txt /app/backend-requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir -r backend-requirements.txt
 
+# Añade un LABEL para invalidar la caché de Railway y forzar un rebuild fresco
+LABEL build.ts="2025-11-05T17:20:00Z"
+
 # Copiar el resto del código
 COPY . /app/
+
+# --- PASO DE DEPURACIÓN ---
+# Listar el contenido de /app para verificar que todos los archivos se copiaron correctamente.
+# Busca "backend/db/config.py" en los logs del build de Railway.
+RUN ls -laR /app
 
 # Crear directorio para logs si es necesario
 RUN mkdir -p /app/logs
