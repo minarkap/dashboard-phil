@@ -15,7 +15,19 @@ if '/app' not in sys.path:
     sys.path.insert(0, '/app')
 _os.environ.setdefault('PYTHONPATH', _root_str)
 
-from backend.db.config import init_db
+# Import robusto de init_db con fallback por ruta absoluta para evitar conflictos con paquetes llamados 'backend'
+try:
+    from backend.db.config import init_db
+except ModuleNotFoundError:
+    import importlib.util as _ilu
+    _cfg_path = _ROOT_DIR / "backend" / "db" / "config.py"
+    _spec = _ilu.spec_from_file_location("_backend_db_config", _cfg_path)
+    if _spec and _spec.loader:
+        _mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_mod)
+        init_db = getattr(_mod, "init_db")
+    else:
+        raise
 from streamlit_app.data import load_all_converted_sales, load_global_range
 from streamlit_app.ui_filters import render_filters
 from streamlit_app.tabs_overview import render_overview_tab
