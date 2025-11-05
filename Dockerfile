@@ -1,4 +1,5 @@
 FROM python:3.11-slim
+LABEL build.ts="2025-11-05T16:55:00Z"
 
 # Establecer directorio de trabajo
 WORKDIR /app
