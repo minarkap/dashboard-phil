@@ -20,7 +20,11 @@ RUN pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir -r backend-requirements.txt
 
 # Añade un LABEL para invalidar la caché de Railway y forzar un rebuild fresco
-LABEL build.ts="2025-11-05T17:30:00Z"
+LABEL build.ts="2025-11-05T17:45:00Z"
+
+# --- PASO DE FUERZA BRUTA ---
+# Copiar explícitamente backend/db para anular cualquier posible problema de .dockerignore
+COPY backend/db /app/backend/db
 
 # Copiar el resto del código
 COPY . /app/
