@@ -3,11 +3,17 @@ import os
 import streamlit as st
 import sys
 from pathlib import Path
+import os as _os
 
 # Asegura que el root del proyecto esté en sys.path para importar 'streamlit_app.*'
 _ROOT_DIR = Path(__file__).resolve().parents[1]
-if str(_ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(_ROOT_DIR))
+_root_str = str(_ROOT_DIR)
+if _root_str not in sys.path:
+    sys.path.insert(0, _root_str)
+# Refuerzo: asegura que '/app' esté en el path en entornos como Railway
+if '/app' not in sys.path:
+    sys.path.insert(0, '/app')
+_os.environ.setdefault('PYTHONPATH', _root_str)
 
 from backend.db.config import init_db
 from streamlit_app.data import load_all_converted_sales, load_global_range
