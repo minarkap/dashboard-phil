@@ -11,23 +11,19 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar archivos de requirements
+# Copiar solo los archivos de dependencias primero para aprovechar la caché de Docker
 COPY requirements.txt /app/
-COPY backend/requirements.txt /app/backend-requirements.txt
+COPY backend/requirements.txt /app/backend/
 
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -r backend-requirements.txt
+    pip install --no-cache-dir -r /app/backend/requirements.txt
 
 # Añade un LABEL para invalidar la caché de Railway y forzar un rebuild fresco
-LABEL build.ts="2025-11-05T17:45:00Z"
+LABEL build.ts="2025-11-05T17:55:00Z"
 
-# --- PASO DE FUERZA BRUTA ---
-# Copiar explícitamente backend/db para anular cualquier posible problema de .dockerignore
-COPY backend/db /app/backend/db
-
-# Copiar el resto del código
-COPY . /app/
+# Ahora copia todo el código fuente de la aplicación
+COPY . .
 
 # --- PASO DE DEPURACIÓN ---
 # Listar el contenido de /app para verificar que todos los archivos se copiaron correctamente.
