@@ -27,8 +27,11 @@ RUN mkdir -p /app/logs
 # Exponer puerto (Railway usa PORT, default 8501 para Streamlit)
 EXPOSE 8501
 
-# Variable de entorno para el puerto (Railway la proporciona)
-ENV PORT=8501
+# Variables de entorno
+# - PORT: Railway la proporciona
+# - PYTHONPATH: garantiza que /app esté en sys.path para imports como 'backend.*'
+ENV PORT=8501 \
+    PYTHONPATH=/app
 
 # Script de inicio que usa PORT si está disponible
 CMD sh -c "streamlit run streamlit_app/app.py --server.port=${PORT:-8501} --server.address=0.0.0.0 --server.headless=true"
