@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Database
+db/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+*.md
+!README.md
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Test files
+test/
+tests/
+*_test.py
+
+# Images (no necesarios en el contenedor)
+*.png
+*.jpg
+*.jpeg
+*.gif
+utm_analysis.png
+utm_platform_analysis.png
+
+# Scripts de desarrollo
+get_refresh_token.py
+diag_db.py
+sript_ga4.py
+start_webhook.py
+

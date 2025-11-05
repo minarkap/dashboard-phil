@@ -1,0 +1,70 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    container_name: dashboard_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dashboard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dashboard}
+      POSTGRES_DB: ${POSTGRES_DB:-dashboard}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dashboard_app
+    ports:
+      - "8501:8501"
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg2://dashboard:dashboard@postgres:5432/dashboard}
+      - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD:-}
+      - APP_PASSWORD=${APP_PASSWORD:-}
+      - STRIPE_API_KEY=${STRIPE_API_KEY:-}
+      - GOOGLE_ADS_DEVELOPER_TOKEN=${GOOGLE_ADS_DEVELOPER_TOKEN:-}
+      - GOOGLE_ADS_CUSTOMER_ID=${GOOGLE_ADS_CUSTOMER_ID:-}
+      - GOOGLE_ADS_LOGIN_CUSTOMER_ID=${GOOGLE_ADS_LOGIN_CUSTOMER_ID:-}
+      - GOOGLE_ADS_CLIENT_ID=${GOOGLE_ADS_CLIENT_ID:-}
+      - GOOGLE_ADS_CLIENT_SECRET=${GOOGLE_ADS_CLIENT_SECRET:-}
+      - GOOGLE_ADS_REFRESH_TOKEN=${GOOGLE_ADS_REFRESH_TOKEN:-}
+      - GA4_PROPERTY_ID=${GA4_PROPERTY_ID:-}
+      - GA4_OAUTH_CLIENT_ID=${GA4_OAUTH_CLIENT_ID:-}
+      - GA4_OAUTH_CLIENT_SECRET=${GA4_OAUTH_CLIENT_SECRET:-}
+      - GA4_OAUTH_REFRESH_TOKEN=${GA4_OAUTH_REFRESH_TOKEN:-}
+      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID:-}
+      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET:-}
+      - OAUTH_REFRESH_TOKEN=${OAUTH_REFRESH_TOKEN:-}
+      - META_ACCESS_TOKEN=${META_ACCESS_TOKEN:-}
+      - META_AD_ACCOUNT_ID=${META_AD_ACCOUNT_ID:-}
+      - META_ATTR_WINDOWS=${META_ATTR_WINDOWS:-7d_click,1d_view}
+      - KAJABI_BASE_URL=${KAJABI_BASE_URL:-}
+      - KAJABI_CLIENT_ID=${KAJABI_CLIENT_ID:-}
+      - KAJABI_CLIENT_SECRET=${KAJABI_CLIENT_SECRET:-}
+      - HOTMART_CLIENT_ID=${HOTMART_CLIENT_ID:-}
+      - HOTMART_CLIENT_SECRET=${HOTMART_CLIENT_SECRET:-}
+      - HOTMART_ACCESS_TOKEN=${HOTMART_ACCESS_TOKEN:-}
+      - GOOGLE_SHEETS_CREDENTIALS_JSON=${GOOGLE_SHEETS_CREDENTIALS_JSON:-}
+      - GOOGLE_SHEETS_ECONOMICS_ID=${GOOGLE_SHEETS_ECONOMICS_ID:-}
+      - GSHEETS_OAUTH_CLIENT_ID=${GSHEETS_OAUTH_CLIENT_ID:-}
+      - GSHEETS_OAUTH_CLIENT_SECRET=${GSHEETS_OAUTH_CLIENT_SECRET:-}
+      - GSHEETS_OAUTH_REFRESH_TOKEN=${GSHEETS_OAUTH_REFRESH_TOKEN:-}
+      - GSHEETS_TAB=${GSHEETS_TAB:-}
+      - UPLOAD_SERVER_PORT=${UPLOAD_SERVER_PORT:-8787}
+      - PORT=${PORT:-8501}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+
+
