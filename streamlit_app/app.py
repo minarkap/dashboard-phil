@@ -23,6 +23,7 @@ from streamlit_app.tabs_products import render_products_tab
 from streamlit_app.tabs_subs import render_subs_tab
 from streamlit_app.tabs_ingest import render_ingest_tab
 from streamlit_app.tabs_ads import render_ads_tab
+from streamlit_app.tabs_analytics import render_analytics_tab
 
 
 st.set_page_config(page_title="Ventas - Dashboard", layout="wide")
@@ -62,13 +63,30 @@ min_d, max_d = load_global_range()
 default_start = min_d or (date.today() - timedelta(days=30))
 default_end = max_d or date.today()
 
-tab_overview, tab_products, tab_subs, tab_ingest, tab_ads = st.tabs(["Visión general", "Productos", "Suscripciones", "Ingesta", "Ads"])
+tab_overview, tab_ads, tab_analytics, tab_products, tab_subs, tab_ingest = st.tabs(["Visión general", "Ads", "Analytics", "Productos", "Suscripciones", "Ingesta"])
 
 with tab_overview:
     # Filtros solo para Visión general
     start, end, product_filter_val, source_filter_val, grain_effective, group_by_category, view_mode, status_opt = render_filters(default_start, default_end, key_prefix="overview_")
     df_base = load_all_converted_sales(start, end, product_filter_val, source_filter_val, grain_effective, group_by_category, status_opt=status_opt)
     render_overview_tab(df_base, start, end, grain_effective, view_mode, source_filter_val)
+
+with tab_ads:
+    # Para Ads, solo necesitamos fechas básicas sin filtros de fuente
+    col1, col2 = st.columns(2)
+    with col1:
+        start = st.date_input("Desde", value=default_start, key="ads_start")
+    with col2:
+        end = st.date_input("Hasta", value=default_end, key="ads_end")
+    render_ads_tab(start, end)
+
+with tab_analytics:
+    col1, col2 = st.columns(2)
+    with col1:
+        start = st.date_input("Desde", value=default_start, key="analytics_start")
+    with col2:
+        end = st.date_input("Hasta", value=default_end, key="analytics_end")
+    render_analytics_tab(start, end)
 
 with tab_products:
     # Filtros solo para Productos
@@ -81,15 +99,6 @@ with tab_subs:
 
 with tab_ingest:
     render_ingest_tab()
-
-with tab_ads:
-    # Para Ads, solo necesitamos fechas básicas sin filtros de fuente
-    col1, col2 = st.columns(2)
-    with col1:
-        start = st.date_input("Desde", value=default_start, key="ads_start")
-    with col2:
-        end = st.date_input("Hasta", value=default_end, key="ads_end")
-    render_ads_tab(start, end)
 
 # Depuración rápida del estado de filtros y datos base (solo para desarrollo)
 # Nota: Las variables ahora están separadas por página, esto solo muestra el estado de la última página visitada
